@@ -13,14 +13,35 @@ const Main = () => {
   const [nextPageUrl, setNextPageUrl] = useState();
   const [prevPageUrl, setPrevPageUrl] = useState();
   const [selectedPoke, setSelectedPoke] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const fetchPokeData = async () => {
+// Update debounced search term after user has stopped typing for 500ms
+useEffect(() => {
+  const timerId = setTimeout(() => {
+    setDebouncedSearchTerm(searchTerm);
+  }, 1000);
+
+  return () => {
+    clearTimeout(timerId);
+  };
+}, [searchTerm]);
+
+// Fetch data whenever debounced search term changes
+useEffect(() => {
+  let url = debouncedSearchTerm
+    ? "https://pokeapi.co/api/v2/pokemon?limit=1000"
+    : currentUrl;
+  fetchPokeData(url);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [debouncedSearchTerm, currentUrl]);
+
+  const fetchPokeData = async (url) => {
     setIsLoading(true);
-    const res = await axios.get(currentUrl);
+    const res = await axios.get(url);
     setNextPageUrl(res.data.next);
     setPrevPageUrl(res.data.previous);
     await loadPokemon(res.data.results);
-    setIsLoading(false);
   };
 
   const loadPokemon = async (data) => {
@@ -30,47 +51,55 @@ const Main = () => {
         return pokemonRecord.data;
       })
     );
-
     setPokeData(_pokemonData);
+    setIsLoading(false);
   };
 
-  useEffect(() => {
-    fetchPokeData();
-  }, [currentUrl]);
-
   return (
-    <div className="main-container">
-      <Pokedex
-        pokemon={pokeData}
-        loading={isLoading}
-        infoPokemon={(pokemon) => setSelectedPoke(pokemon)}
-      />
-      <div className="button-container">
-        {prevPageUrl && (
-          <button
-            className="prev-button"
-            onClick={() => setCurrentUrl(prevPageUrl)}
-          >
-            Previous
-          </button>
-        )}
-        {nextPageUrl && (
-          <button
-            className="next-button"
-            onClick={() => setCurrentUrl(nextPageUrl)}
-          >
-            Next
-          </button>
-        )}
-      </div>
-      {selectedPoke && (
-        <Pokeinfo
-          selectedPoke={selectedPoke}
-          onClose={() => setSelectedPoke(null)}
+  <div className="main-container">
+    <input className="search-bar"
+      type="text"
+      placeholder="Search Pokemon"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+    {isLoading ? (
+      <p className="loading-render">Loading...</p>
+    ) : (
+      <>
+        <Pokedex
+          allPokemon={pokeData}
+          searchTerm={searchTerm}
+          infoPokemon={setSelectedPoke}
         />
-      )}
-    </div>
-  );
+        <div className="button-container">
+          {prevPageUrl && (
+            <button
+              className="prev-button"
+              onClick={() => setCurrentUrl(prevPageUrl)}
+            >
+              Previous
+            </button>
+          )}
+          {nextPageUrl && (
+            <button
+              className="next-button"
+              onClick={() => setCurrentUrl(nextPageUrl)}
+            >
+              Next
+            </button>
+          )}
+        </div>
+        {selectedPoke && (
+          <Pokeinfo
+            selectedPoke={selectedPoke}
+            onClose={() => setSelectedPoke(null)}
+          />
+        )}
+      </>
+    )}
+  </div>
+);
 };
 
 export default Main;

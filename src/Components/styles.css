@@ -3,6 +3,16 @@ body {
   padding: 0;
 }
 
+.loading-render {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  font-size: 25px;
+}
+
 /* POKEDEX STYLES */
 
 .main-container {
@@ -42,6 +52,25 @@ body {
   gap: 0.5%;
   padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-bar {
+  width: 20%;
+  padding: 1%;
+  margin: 1.5%;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  transition: 0.5s;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+
+.search-bar:focus {
+  border-color: #d1bc42;
+  background-color: rgb(231, 229, 229);
 }
 
 /* styles for screens with a width of 600px or less */

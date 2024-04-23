@@ -48,7 +48,7 @@ const Legends = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>; // render loading state
+    return <p className="loading-render">Loading...</p>; // render loading state
   }
 
   return (
