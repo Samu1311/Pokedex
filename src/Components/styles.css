@@ -42,14 +42,14 @@ body {
   gap: 0.5%;
   padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow-y: auto; 
-  height: calc(100vh - 100px);
 }
 
 /* styles for screens with a width of 600px or less */
 @media screen and (max-width: 600px) {
   .Pokedex {
     grid-template-columns: repeat(3, 1fr);
+    overflow-y: auto; 
+    height: calc(100vh - 100px);
   }
 }
 
@@ -246,6 +246,14 @@ body {
 .legend-images img {
   width: 50%;
   height: 50%;
+}
+
+/* styles for screens with a width of 600px or less */
+@media screen and (max-width: 600px) {
+  .legend-images img {
+    width: 75%; /* adjust as needed */
+    height: auto; /* maintain aspect ratio */
+  }
 }
 
 .sprites {
