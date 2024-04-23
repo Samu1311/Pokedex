@@ -1,20 +1,23 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import Homepage from "./Components/Main";
+import ReactDOM from "react-dom/client";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import Main from "./Components/Main";
 import Legends from "./Components/Legends";
 import About from "./Components/About";
+import Header from "./Components/Header";
+import "./Components/styles.css";
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
-    <Router basename={process.env.PUBLIC_URL}>
+    <HashRouter>
+      <Header /> {/* Show the header on all pages */}
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="legends" element={<Legends />} />
-        <Route path="about" element={<About />} />
+        <Route path="/" element={<Main />} />
+        <Route path="/legends" element={<Legends />} />
+        <Route path="/about" element={<About />} />
       </Routes>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById("root")
+    </HashRouter>
+  </React.StrictMode>
 );
+

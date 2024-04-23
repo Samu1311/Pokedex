@@ -3,7 +3,6 @@ import axios from "axios";
 import Pokedex from "./Pokedex";
 import Pokeinfo from "./PokeInfo";
 import "./styles.css";
-import Layout from "./Layout";
 
 const Main = () => {
   const [pokeData, setPokeData] = useState([]);
@@ -41,7 +40,6 @@ const Main = () => {
 
   return (
     <div className="main-container">
-      <Layout>
       <Pokedex
         pokemon={pokeData}
         loading={isLoading}
@@ -71,7 +69,6 @@ const Main = () => {
           onClose={() => setSelectedPoke(null)}
         />
       )}
-      </Layout>
     </div>
   );
 };

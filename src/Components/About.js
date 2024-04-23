@@ -1,12 +1,10 @@
 import React from "react";
 import "./styles.css";
-import Layout from "./Layout";
 import PokeApiLogo from "./Images/pokeapi_logo.png";
 
 function About() {
   return (
     <div className="about-container">
-      <Layout>
         <div className="about-tittle">About</div>
         <div className="about-introduction">
           Welcome to our Pokédex App! Designed for both new trainers and
@@ -74,7 +72,6 @@ function About() {
               Pokédex app.
             </p>
           </div>
-      </Layout>
     </div>
   );
 }

@@ -33,10 +33,10 @@ function Header() {
           <Link to="/" className="nav-link">
             Homepage
           </Link>
-          <Link to="/Legends" className="nav-link">
+          <Link to="/legends" className="nav-link">
             Legends
           </Link>
-          <Link to="/About" className="nav-link">
+          <Link to="/about" className="nav-link">
             About
           </Link>
         </Nav>
