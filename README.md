@@ -1,3 +1,7 @@
+# Visit the public link
+
+You can access the GitHub pages hosted app by visiting this link: (https://samu1311.github.io/Pokedex/)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
