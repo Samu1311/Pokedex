@@ -1,0 +1,47 @@
+.Pokedex {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5%;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* styles for screens with a width of 600px or less */
+@media screen and (max-width: 600px) {
+  .Pokedex {
+    grid-template-columns: repeat(3, 1fr);
+    overflow-y: auto; 
+    height: calc(100vh - 100px);
+  }
+}
+
+.PokemonCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #000;
+  padding: 1rem;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.PokemonCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+/* styles for screens with a width of 600px or less */
+@media screen and (max-width: 600px) {
+  .PokemonCard {
+    padding: 0.5rem;
+  }
+}
+
+.PokemonName {
+  font-size: 1rem;
+  font-weight: bold;
+}

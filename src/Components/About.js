@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles.css";
+import "./About.css";
 import PokeApiLogo from "./Images/pokeapi_logo.png";
 
 function About() {

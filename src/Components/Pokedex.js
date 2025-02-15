@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles.css";
+import "./Pokedex.css";
 import { colors } from "./Colors.js";
 
 function PokemonCard({ pokemon, infoPokemon }) {

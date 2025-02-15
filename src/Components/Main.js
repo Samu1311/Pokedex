@@ -2,104 +2,167 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pokedex from "./Pokedex";
 import Pokeinfo from "./PokeInfo";
-import "./styles.css";
+import { colors } from "./Colors";
+import "./Main.css";
 
 const Main = () => {
+  const [allPokeData, setAllPokeData] = useState([]);
   const [pokeData, setPokeData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUrl, setCurrentUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon?limit=24"
-  );
-  const [nextPageUrl, setNextPageUrl] = useState();
-  const [prevPageUrl, setPrevPageUrl] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedPoke, setSelectedPoke] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
 
-// Update debounced search term after user has stopped typing for 500ms
-useEffect(() => {
-  const timerId = setTimeout(() => {
-    setDebouncedSearchTerm(searchTerm);
-  }, 1000);
+  const POKEMON_PER_PAGE = 24;
 
-  return () => {
-    clearTimeout(timerId);
-  };
-}, [searchTerm]);
+  // Update debounced search term after user has stopped typing for 500ms
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
-// Fetch data whenever debounced search term changes
-useEffect(() => {
-  let url = debouncedSearchTerm
-    ? "https://pokeapi.co/api/v2/pokemon?limit=1000"
-    : currentUrl;
-  fetchPokeData(url);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [debouncedSearchTerm, currentUrl]);
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
 
-  const fetchPokeData = async (url) => {
+  // Fetch all Pokémon data initially
+  useEffect(() => {
+    const fetchAllPokeData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1000", {
+          timeout: 20000, // Increase timeout to 20 seconds
+        });
+        const allData = await Promise.all(
+          res.data.results.map(async (pokemon) => {
+            let pokemonRecord = await axios.get(pokemon.url, {
+              timeout: 20000, // Increase timeout to 20 seconds
+            });
+            return pokemonRecord.data;
+          })
+        );
+        setAllPokeData(allData);
+      } catch (error) {
+        console.error("Error fetching Pokémon data:", error);
+      } finally {
+        // Add a small delay before setting isLoading to false during the initial fetch
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+      }
+    };
+
+    fetchAllPokeData();
+  }, []);
+
+  // Filter and paginate Pokémon data whenever debounced search term, selected type, or current page changes
+  useEffect(() => {
+    if (allPokeData.length === 0) return;
+
     setIsLoading(true);
-    const res = await axios.get(url);
-    setNextPageUrl(res.data.next);
-    setPrevPageUrl(res.data.previous);
-    await loadPokemon(res.data.results);
+    const filteredData = allPokeData.filter(pokemon =>
+      (!selectedType || pokemon.types.some(type => type.type.name === selectedType)) &&
+      (!debouncedSearchTerm || pokemon.name.includes(debouncedSearchTerm.toLowerCase()))
+    );
+
+    const startIndex = (currentPage - 1) * POKEMON_PER_PAGE;
+    const paginatedData = filteredData.slice(startIndex, startIndex + POKEMON_PER_PAGE);
+
+    setPokeData(paginatedData);
+    setIsLoading(false);
+  }, [allPokeData, debouncedSearchTerm, selectedType, currentPage]);
+
+  const handleFilterClick = (type) => {
+    setSelectedType(type);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
-  const loadPokemon = async (data) => {
-    let _pokemonData = await Promise.all(
-      data.map(async (pokemon) => {
-        let pokemonRecord = await axios.get(pokemon.url);
-        return pokemonRecord.data;
-      })
-    );
-    setPokeData(_pokemonData);
-    setIsLoading(false);
+  const handleAllTypesClick = () => {
+    setSelectedType("");
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  const toggleFilterMenu = () => {
+    setIsFilterMenuOpen(!isFilterMenuOpen);
   };
 
   return (
-  <div className="main-container">
-    <input className="search-bar"
-      type="text"
-      placeholder="Search Pokemon"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-    {isLoading ? (
-      <p className="loading-render">Loading...</p>
-    ) : (
-      <>
-        <Pokedex
-          allPokemon={pokeData}
-          searchTerm={searchTerm}
-          infoPokemon={setSelectedPoke}
-        />
-        <div className="button-container">
-          {prevPageUrl && (
-            <button
-              className="prev-button"
-              onClick={() => setCurrentUrl(prevPageUrl)}
-            >
-              Previous
-            </button>
-          )}
-          {nextPageUrl && (
-            <button
-              className="next-button"
-              onClick={() => setCurrentUrl(nextPageUrl)}
-            >
-              Next
-            </button>
-          )}
+    <div className="main-container">
+      <input className="search-bar"
+        type="text"
+        placeholder="Search Pokemon"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <div className="filter-container">
+        <button
+          className="filter-button"
+          onClick={toggleFilterMenu}
+        >
+          {isFilterMenuOpen ? "▲" : "▼"} Filter by Type
+        </button>
+      </div>
+      <div className={`filter-menu ${isFilterMenuOpen ? "open" : ""}`}>
+        <div
+          className={`filter-item ${selectedType === "" ? "selected" : ""}`}
+          style={{ backgroundColor: "#ccc", color: "#000" }}
+          onClick={handleAllTypesClick}
+        >
+          All Types
         </div>
-        {selectedPoke && (
-          <Pokeinfo
-            selectedPoke={selectedPoke}
-            onClose={() => setSelectedPoke(null)}
+        {Object.keys(colors).map((type) => (
+          <div
+            key={type}
+            className={`filter-item ${selectedType === type ? "selected" : ""}`}
+            style={{ backgroundColor: colors[type] }}
+            onClick={() => handleFilterClick(type)}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </div>
+        ))}
+      </div>
+
+      {isLoading ? (
+        <p className="loading-render">Loading...</p>
+      ) : (
+        <>
+          <Pokedex
+            allPokemon={pokeData}
+            searchTerm={searchTerm}
+            infoPokemon={setSelectedPoke}
           />
-        )}
-      </>
-    )}
-  </div>
-);
+          <div className="button-container">
+            {currentPage > 1 && (
+              <button
+                className="prev-button"
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </button>
+            )}
+            {pokeData.length === POKEMON_PER_PAGE && (
+              <button
+                className="next-button"
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+            )}
+          </div>
+          {selectedPoke && (
+            <Pokeinfo
+              selectedPoke={selectedPoke}
+              onClose={() => setSelectedPoke(null)}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Main;

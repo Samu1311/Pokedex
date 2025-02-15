@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "./styles.css";
+import "./Header.css";
 import logotype from "./Images/Pokedex_word.png"; // Import the logotype
 import closedPokeball from "./Images/Closed_pokeball.png"; // Import the closed pokeball image
 import openPokeball from "./Images/Open_pokeball.png"; // Import the open pokeball image
@@ -12,24 +12,24 @@ function Header() {
   return (
     <Navbar bg="dark" variant="dark" className="justify-content-between">
       <div className="Navbar-Images">
-      <Nav.Link onClick={() => setIsOpen(!isOpen)}>
-        <img
-          className="NavImage"
-          src={isOpen ? openPokeball : closedPokeball}
-          alt="Menu"
-        />
-      </Nav.Link>
-      <Navbar.Brand>
-        <img
-          alt="Logotype"
-          src={logotype}
-          height="100"
-          className="d-inline-block align-top"
-        />
-      </Navbar.Brand>
+        <Nav.Link onClick={() => setIsOpen(!isOpen)}>
+          <img
+            className="NavImage"
+            src={isOpen ? openPokeball : closedPokeball}
+            alt="Menu"
+          />
+        </Nav.Link>
+        <Navbar.Brand>
+          <img
+            alt="Logotype"
+            src={logotype}
+            height="100"
+            className="d-inline-block align-top"
+          />
+        </Navbar.Brand>
       </div>
-      {isOpen && (
-        <Nav className="Nav-links-container">
+      <div className={`Nav-links-container ${isOpen ? "open" : ""}`}>
+        <Nav className="navbar-nav">
           <Link to="/" className="nav-link">
             Homepage
           </Link>
@@ -40,7 +40,7 @@ function Header() {
             About
           </Link>
         </Nav>
-      )}
+      </div>
     </Navbar>
   );
 }

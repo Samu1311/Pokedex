@@ -1,0 +1,163 @@
+/* Main container styles */
+.main-container {
+  background-color: #4a4a4a;
+  padding: 20px;
+}
+
+/* Search bar styles */
+.search-bar {
+  width: 300px;
+  padding: 12px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 20px;
+  background-color: #f8f8f8;
+  transition: 0.5s;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+
+.search-bar:focus {
+  border-color: #d1bc42;
+  background-color: rgb(231, 229, 229);
+}
+
+/* Filter container styles */
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.filter-button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Filter menu styles */
+.filter-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 1s ease, opacity 0.5s ease;
+}
+
+.filter-menu.open {
+  max-height: 500px; /* Adjust this value as needed */
+  opacity: 1;
+}
+
+.filter-item {
+  padding: 10px 20px;
+  border-radius: 5px; /* Updated border radius */
+  border: 1px solid #000; /* Thin black border */
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.3s;
+  text-align: center; /* Center the text */
+  font-family: 'Roboto', sans-serif; /* Use a more modern font */
+  flex: 1 1 calc(10% - 10px); /* Ensure buttons are in 2 rows */
+  max-width: calc(10% - 10px); /* Ensure buttons are in 2 rows */
+}
+
+.filter-item:nth-child(n+11) {
+  flex: 1 1 calc(10% - 10px); /* Ensure the next 9 items span 1 column each */
+  max-width: calc(10% - 10px); /* Ensure the next 9 items span 1 column each */
+}
+
+.filter-item:hover {
+  transform: translateY(-5px);
+}
+
+.filter-item.selected {
+  border: 2px solid #000; /* Highlight selected item with thicker border */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow to highlight */
+}
+
+/* Button container styles */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+  background-color: #555;
+  color: white;
+}
+
+.prev-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.next-button {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+.Pokedex {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5%;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* styles for screens with a width of 600px or less */
+@media screen and (max-width: 600px) {
+  .Pokedex {
+    grid-template-columns: repeat(3, 1fr);
+    overflow-y: auto; 
+    height: calc(100vh - 100px);
+  }
+}
+
+/* Add media queries for responsiveness */
+
+/* styles for screens with a width of 600px or less */
+@media screen and (max-width: 600px) {
+  .filter-menu.open {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filter-item {
+    width: 80%;
+    text-align: center;
+  }
+}
